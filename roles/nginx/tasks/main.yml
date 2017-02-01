@@ -1,0 +1,8 @@
+- name: Install repository
+  yum: name={{ nginx_repo_urls }} state=present
+
+- name: Install
+  yum: name=nginx state=present
+
+- name: Start and autorun
+  service: name=nginx state=started enabled=yes

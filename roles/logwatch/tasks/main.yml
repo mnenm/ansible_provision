@@ -1,0 +1,13 @@
+##WIP
+
+- name: Install
+  yum: name=logwatch
+
+- name: Create output dir
+  file: path=/tmp/logwatch state=directory
+
+# - name: Copy config
+#   template: src=logwatch.conf.j2 dest=/etc/logwatch/conf/logwatch.conf backup=yes
+
+# - name: Add configure for logrotate
+#   template:

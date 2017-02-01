@@ -1,0 +1,6 @@
+- name: Run script
+  script: ping.sh
+  register: result
+
+- debug:
+    var: result

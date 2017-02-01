@@ -1,0 +1,24 @@
+---
+- name: "Privisioning dev-servers"
+  become: yes
+  become_user: root
+  hosts: dev-servers
+  roles:
+    - common
+    - dotfiles
+    - zplug
+    - httpd
+    - mysql5.7
+    - php7
+    - composer
+    - aws-cli
+    - tmux
+    - td-agent
+    - docker
+    - redis
+    - nodejs
+
+    #- nginx
+    #- mysql5.6
+
+    #- logwatch

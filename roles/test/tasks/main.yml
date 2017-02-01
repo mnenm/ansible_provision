@@ -1,0 +1,46 @@
+- name: Run script
+  script: ping.sh
+  register: result
+
+# - debug:
+#     var: result
+
+- name: Using template
+  template: src=base.j2 dest=/tmp/template.txt owner={{ username }} group={{ username }} mode=0644
+
+- name: Replace test#1
+  lineinfile: >-
+    dest='/tmp/template.txt'
+    state=present
+    backrefs=yes
+    regexp='%replace%'
+    line='Awsome!'
+
+
+# - name: Get initial password
+#   shell: "grep 'password is generated' /var/log/mysqld.log | awk -F'root@localhost: ' '{print $2}'"
+#   register: initial_root_password
+#
+# - name: Save initial password
+#   shell: >
+#     umask 0077
+#     cat > /root/.tmpl.my.cnf <<EOF
+#     [client]
+#     user=root
+#     password={{ initial_root_password }}
+#     connect-expired-password
+#     EOF
+#
+# - name: Change root password
+#   shell: >
+#     mysql --defaults-file=/root/.tmpl.my.cnf -e
+#     "alter user 'root'@'localhost' identified by '{{ root_pass }}'"
+#
+# - name: Save new password
+#   shell: >
+#     umask 0077
+#     cat > /root/.new.my.cnf <<EOF
+#     [client]
+#     user=root
+#     password={{ root_pass }}
+#     EOF

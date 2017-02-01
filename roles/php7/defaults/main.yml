@@ -1,0 +1,10 @@
+remi_rpm_url: http://rpms.famillecollet.com/enterprise/remi-release-7.rpm
+php_extenssions:
+  - php
+  - php-devel
+  - php-cli
+  - php-mbstring
+  - php-pdo
+  - php-mysqlnd
+  - php-opcache
+  - php-xml

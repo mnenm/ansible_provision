@@ -1,0 +1,28 @@
+- name: Install
+  yum:
+    name: httpd
+    state: present
+
+# - name: Copy httpd.conf
+#   template: src=httpd.conf.j2 dest=/etc/httpd/conf/httpd.conf backup=yes
+
+- name: Start and autorun httpd
+  service: name=httpd state=started enabled=yes
+
+- name: Create www group
+  group: name=www state=present
+
+- name: Join to www group
+  user: name={{ item }} append=yes groups=www
+  with_items:
+    - apache
+    - "{{ username }}"
+
+- name: Create application log dir
+  file: path=/var/www/html/logs state=directory owner=apache group=www mode=0755
+
+- name: Create application log sub dir
+  file: path=/var/www/html/logs/{{ item }} state=directory owner=apache group=www mode=0755
+  with_items:
+    - daily
+    - hourly

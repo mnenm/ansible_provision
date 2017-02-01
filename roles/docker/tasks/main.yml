@@ -1,0 +1,5 @@
+- name: Install for CentOS7
+  yum: name=docker
+
+- name: Start and autorun docker
+  service: name=docker state=started enabled=yes

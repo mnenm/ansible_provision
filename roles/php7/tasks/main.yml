@@ -1,0 +1,6 @@
+- name: Install remi
+  yum: name={{ remi_rpm_url }}
+
+- name: Install php7
+  yum: name={{ item }} state=latest enablerepo=remi,remi-php70
+  with_items: "{{ php_extenssions }}"

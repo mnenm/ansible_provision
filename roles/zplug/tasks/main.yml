@@ -1,0 +1,22 @@
+- name: Install
+  git:
+    repo: "{{ zplug_github_repo_url }}"
+    dest: "{{ zplug_home_path }}"
+    clone: yes
+    update: no
+
+- name: Change owner the directory
+  file:
+    path: "{{ zplug_home_path }}"
+    owner: "{{ username }}"
+    group: "{{ username }}"
+    recurse: yes
+
+- name: Append settings to .zshrc
+  lineinfile: >-
+    dest={{ userhome }}/.zshrc
+    state=present
+    line='\n[ -f {{ userhome }}/.zplugrc ] && source {{ userhome }}/.zplugrc'
+
+- name: Copy .zplugrc
+  template: src=zplugrc.j2 dest={{ userhome }}/.zplugrc owner={{ username }} group={{ username }} mode=0755

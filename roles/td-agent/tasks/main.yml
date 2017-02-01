@@ -1,0 +1,15 @@
+- name: Install
+  shell: curl -L https://toolbelt.treasuredata.com/sh/install-redhat-td-agent2.sh | sh
+
+- name: Create config dir
+  file: path={{ tdagent_config_dir_path }} state=directory
+
+# - name: Copy configure files
+#   template: src={{ item }} dest={{ td-agent_config_dir_path }}
+#   with_items: {{ tdagent_config_files }}
+
+- name: Create log dir
+  file: path={{ tdagent_log_dir_path }} state=directory mode=0777
+
+- name: Start and autorun
+  service: name=td-agent state=started enabled=yes

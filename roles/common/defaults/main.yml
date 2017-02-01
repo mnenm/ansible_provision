@@ -1,0 +1,11 @@
+default_packages:
+  - epel-release
+  - jq
+  - ntp
+  - telnet
+  - tig
+  - tree
+  - vim
+  - wget
+  - zlib-devel
+  - zsh

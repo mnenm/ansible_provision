@@ -1,0 +1,21 @@
+- name: Checkout dotfiles
+  git:
+    repo: "{{ github_repo_url }}"
+    dest: "{{ dotfiles_home }}"
+
+- name: Change owner the directory
+  file:
+    path: "{{ dotfiles_home }}"
+    owner: "{{ username }}"
+    group: "{{ username }}"
+    recurse: yes
+
+- name: Symlink
+  file:
+    src: "{{ userhome }}/dotfiles/{{ item }}"
+    dest: "{{ userhome }}/{{ item }}"
+    state: link
+    owner: "{{ username }}"
+    group: "{{ username }}"
+    force: yes
+  with_items: "{{ config_files }}"

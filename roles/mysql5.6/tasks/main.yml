@@ -1,0 +1,57 @@
+- name: Register repository
+  yum:
+    name: http://dev.mysql.com/get/mysql57-community-release-el6-7.noarch.rpm
+    state: present
+
+- name: Install MySQL5.6
+  yum:
+    name: "{{ item }}"
+    enablerepo: mysql56-community
+    disablerepo: mysql57-community
+    state: present
+  with_items:
+    - mysql-community-server
+    - mysql-community-client
+
+- name: Start and autorun MySQL5.6
+  service: name=mysqld state=started enabled=yes
+
+- name: Install MySQL-python for ansible
+  yum: name=MySQL-python state=present
+
+- name: Check config file
+  shell: "mysqladmin --defaults-file=/root/.my.cnf ping | grep alive"
+  ignore_errors: true
+  register: init_flag
+
+- name: Clear Anonymous
+  mysql_user:
+    name: ""
+    host: "{{ item }}"
+    state: absent
+  with_items:
+    - localhost.localdomain
+    - localhost
+  when: init_flag.rc == 1
+
+- name: Change root password
+  mysql_user: name=root host={{ item }} password={{ mysql_root_pass }}
+  with_items:
+    - 127.0.0.1
+    - ::1
+    - localhost.localdomain
+    - localhost
+  when: init_flag.rc == 1
+
+- name: Set root password
+  template: src=my.cnf.j2 dest=/root/.my.cnf owner=root group=root mode=0600
+  when: init_flag.rc == 1
+
+- name: Create DB
+  mysql_db: name={{ db_name }} state=present
+  when: init_flag.rc == 1
+
+- name: Create User
+  mysql_user: name={{ db_user }} password={{ db_pass }} priv={{ db_name }}.*:ALL,GRANT state=present
+  when: init_flag.rc == 1
+

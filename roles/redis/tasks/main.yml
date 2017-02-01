@@ -1,0 +1,5 @@
+- name: Install
+  yum: name=redis state=latest enablerepo=epel
+
+- name: Start and autorun
+  service: name=redis state=started enabled=yes

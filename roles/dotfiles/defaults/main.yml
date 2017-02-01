@@ -1,0 +1,11 @@
+github_repo_url: https://github.com/mnenm/dotfiles.git
+dotfiles_home: "{{ userhome }}/dotfiles"
+config_files:
+  - .gitconfig
+  - .gitignore
+  - .gitignore_global
+  - .gitmodules
+  - .tmux.conf
+  - .zshrc
+  - .vimrc
+  - .vim

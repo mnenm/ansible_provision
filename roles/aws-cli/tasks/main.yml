@@ -1,0 +1,7 @@
+- name: Install pip
+  yum: name=python-pip enablerepo=epel
+
+- name: Install AWS CLI
+  pip: >
+    name=awscli
+    state=latest

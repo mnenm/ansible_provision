@@ -1,0 +1,60 @@
+- name: Check installed nodebrew
+  shell: which nodebrew
+  become_user: "{{ username }}"
+  ignore_errors: true
+  environment:
+    PATH: "{{ userhome }}/.nodebrew/current/bin:{{ ansible_env.PATH }}"
+  register: nodebrew_installed
+
+- name: Get nodebrew
+  get_url: url={{ nodebrew_repo_url }} dest=/tmp/nodebrew
+  when: nodebrew_installed|failed
+
+- name: Install nodebrew
+  shell: "perl /tmp/nodebrew setup"
+  become_user: "{{ username }}"
+  when: nodebrew_installed|failed
+
+- name: Append PATH to .zshrc
+  lineinfile: >-
+    dest={{ userhome }}/.zshrc
+    state=present
+    line='\nexport PATH={{ userhome }}/.nodebrew/current/bin:$PATH'
+  when: nodebrew_installed|failed
+
+- name: Check installed nodejs
+  shell: which node
+  become_user: "{{ username }}"
+  ignore_errors: true
+  environment:
+    PATH: "{{ userhome }}/.nodebrew/current/bin:{{ ansible_env.PATH }}"
+  register: nodejs_installed
+
+- name: Check installed nodejs {{ nodejs_version }}
+  shell: "nodebrew ls | grep {{ nodejs_version }}"
+  become_user: "{{ username }}"
+  ignore_errors: true
+  environment:
+    PATH: "{{ userhome }}/.nodebrew/current/bin:{{ ansible_env.PATH }}"
+  when: nodejs_installed|success
+  register: target_version_exists
+
+- name: Install nodejs ver.{{ nodejs_version }}
+  shell: "nodebrew install-binary v{{ nodejs_version }}"
+  become_user: "{{ username }}"
+  environment:
+    PATH: "{{ userhome }}/.nodebrew/current/bin:{{ ansible_env.PATH }}"
+  when: (nodejs_installed|failed) or (target_version_exists|failed)
+
+- name: Use nodejs ver.{{ nodejs_version }}
+  shell: "nodebrew use {{ nodejs_version }}"
+  become_user: "{{ username }}"
+  environment:
+    PATH: "{{ userhome }}/.nodebrew/current/bin:{{ ansible_env.PATH }}"
+
+- name: Install npm modules
+  shell: "npm install -g {{ item }}"
+  become_user: "{{ username }}"
+  environment:
+    PATH: "{{ userhome }}/.nodebrew/current/bin:{{ ansible_env.PATH }}"
+  with_items: "{{ npm_modules }}"

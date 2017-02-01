@@ -1,0 +1,5 @@
+tdagent_log_dir_path: /var/log/td-agent
+tdagent_config_dir_path: /etc/td-agent/conf.d
+tdagent_config_files:
+  - td-agent.conf
+  - tail.conf

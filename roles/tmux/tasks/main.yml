@@ -1,0 +1,26 @@
+- name: Install Dependency
+  yum: name={{ item }} state=latest
+  with_items:
+    - ncurses-devel
+    - libevent-devel
+
+- name: Download
+  get_url:
+    url=https://github.com/tmux/tmux/releases/download/{{ tmux_ver }}/tmux-{{ tmux_ver }}.tar.gz
+    dest="/tmp/tmux-{{ tmux_ver }}.tar.gz"
+
+- name: Extract
+  unarchive:
+    src="/tmp/tmux-{{ tmux_ver }}.tar.gz"
+    dest="/tmp"
+    copy=no
+
+- name: Install
+  shell: >
+    {{ item }}
+    chdir="/tmp/tmux-{{ tmux_ver }}"
+    creates="/usr/local/bin/tmux"
+  with_items:
+    - ./configure
+    - make
+    - make install

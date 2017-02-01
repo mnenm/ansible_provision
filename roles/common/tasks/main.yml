@@ -1,0 +1,29 @@
+- name: Install "Development tools" package group
+  yum: name="@Development tools" state=present
+
+- name: Install basic packages
+  yum: name={{ item }} state=present
+  with_items: "{{ default_packages }}"
+
+- name: Configure ntpd
+  template: src=ntp.conf.j2 dest=/etc/ntp.conf backup=yes
+  notify:
+    - restart ntpd
+
+- name: Start and autorun ntpd
+  service: name=ntpd state=started enabled=yes
+
+- hostname: name={{ hostname }}
+
+- user: name={{ username }} shell=/bin/zsh password={{ userpass }}
+
+- name: Copy sudoers file
+  template: src=sudoers.j2 dest=/etc/sudoers.d/{{ username }}
+
+- name: Set publickey
+  authorized_key: user={{ username }} key={{ item }}
+  with_file:
+    - local/id_rsa_general.pub
+
+- name: Copy .zshrc
+  template: src=zshrc.j2 dest={{ userhome }}/.zshrc owner={{ username }} group={{ username }}

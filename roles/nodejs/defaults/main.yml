@@ -1,0 +1,5 @@
+nodebrew_repo_url: https://git.io/nodebrew
+nodejs_version: 7.5.0
+npm_modules:
+  - coffee-script
+  - hubot

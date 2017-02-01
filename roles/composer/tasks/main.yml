@@ -1,0 +1,16 @@
+- name: Get composer installer
+  get_url:
+    url: "{{ composer_dl_url }}"
+    dest: /tmp/composer-installer.php
+    mode: 0755
+
+- name: Install
+  command: >
+    php composer-installer.php
+    chdir=/tmp
+    creates=/usr/bin/composer
+
+- name: Move composer into globally-accessible location
+  shell: >
+    mv /tmp/composer.phar /usr/bin/composer
+    creates=/usr/bin/composer

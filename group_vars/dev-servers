@@ -1,0 +1,4 @@
+username: developer
+userpass: developer
+hostname: development
+userhome: "/home/{{ username }}"
