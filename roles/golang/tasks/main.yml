@@ -1,0 +1,22 @@
+- name: Get binary
+  get_url:
+    url: "{{ go_binary_url }}"
+    dest: "/usr/local/src/{{ go_binary_name }}"
+    checksum: "{{ go_checksum }}"
+
+- name: Extract golang
+  unarchive:
+    src: "/usr/local/src/{{ go_binary_name }}"
+    dest: /usr/local
+    copy: no
+
+- name: Append GO bin dir to PATH
+  copy:
+    src: go-bin.sh
+    dest: /etc/profile.d
+
+- name: Append GOPATH
+  copy:
+    src: go-path.sh
+    dest: /etc/profile.d
+  when: set_go_path

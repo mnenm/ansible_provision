@@ -18,6 +18,7 @@
     - redis
     - nodejs
     - memcached
+    - golang
 
     #- nginx
     #- mysql5.6
