@@ -17,6 +17,7 @@
     - docker
     - redis
     - nodejs
+    - memcached
 
     #- nginx
     #- mysql5.6
